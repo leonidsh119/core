@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+   <Result>
+      <Decision>Permit</Decision>
+      <Status>
+         <StatusCode Value="0"/>
+      </Status>
+      <AssociatedAdvice>
+         <Advice AdviceId="urn:oasis:names:tc:xacml:3.0:pep-action:dst-sgt">
+            <AttributeAssignment AttributeId="dst-sgt" DataType="http://www.w3.org/2001/XMLSchema#integer">101</AttributeAssignment>
+         </Advice>
+      </AssociatedAdvice>
+      <PolicyIdentifierList>
+         <PolicySetIdReference Version="3.0">urn:spt:names:tc:xacml:3.0:policySetid:01</PolicySetIdReference>
+      </PolicyIdentifierList>
+   </Result>
+</Response>

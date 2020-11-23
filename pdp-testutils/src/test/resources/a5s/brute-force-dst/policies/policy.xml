@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:a5s-dst-sgt" PolicySetId="urn:spt:names:tc:xacml:3.0:policySetid:01" Version="3.0">
+    <Description>A5S Authorization policy</Description>
+    <Target/>
+    <Policy RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides" PolicyId="urn:spt:names:tc:xacml:3.0:policyid:sql-servers" Version="3.0">
+        <Description>SQL Servers</Description>
+        <Target/>
+        <CombinerParameters>
+            <CombinerParameter ParameterName="dst-sgt">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">101</AttributeValue>
+            </CombinerParameter>
+        </CombinerParameters>
+        <VariableDefinition VariableId="group-name-developer">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">dev</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-manager">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">mgr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-hr">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">hr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="radius-nas-port-wired">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wired</AttributeValue>
+        </VariableDefinition>
+        <Rule Effect="Permit" RuleId="urn:spt:names:tc:xacml:3.0:ruleid:permit-developer">
+            <Description>Permit Developer</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                    <Description>User belongs to Developer</Description>
+                    <VariableReference VariableId="group-name-developer"/>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                </Apply>
+            </Condition>
+        </Rule>
+        <RuleCombinerParameters RuleIdRef="urn:spt:names:tc:xacml:3.0:ruleid:permit-developer">
+            <CombinerParameter ParameterName="RuleCombinerParameter-1">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">11111</AttributeValue>
+            </CombinerParameter>
+        </RuleCombinerParameters>
+    </Policy>
+    <PolicyCombinerParameters PolicyIdRef="urn:spt:names:tc:xacml:3.0:policyid:sql-servers">
+        <CombinerParameter ParameterName="dst-sgt">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">101</AttributeValue>
+        </CombinerParameter>
+    </PolicyCombinerParameters>
+    <Policy RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides" PolicyId="urn:spt:names:tc:xacml:3.0:policyid:printers" Version="3.0">
+        <Description>Printers</Description>
+        <Target/>
+        <CombinerParameters>
+            <CombinerParameter ParameterName="dst-sgt">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">202</AttributeValue>
+            </CombinerParameter>
+        </CombinerParameters>
+        <VariableDefinition VariableId="group-name-developer">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">dev</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-manager">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">mgr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-hr">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">hr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="radius-nas-port-wired">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wired</AttributeValue>
+        </VariableDefinition>
+        <Rule Effect="Permit" RuleId="urn:spt:names:tc:xacml:3.0:ruleid:permit-wired-developer">
+            <Description>Permit Manager from wired connection</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <Description>AND</Description>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                        <Description>User belongs to Developers</Description>
+                        <VariableReference VariableId="group-name-manager"/>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    </Apply>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                        <Description>wired connection</Description>
+                        <VariableReference VariableId="radius-nas-port-wired"/>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-nas-port" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    </Apply>
+                </Apply>
+            </Condition>
+        </Rule>
+        <Rule Effect="Permit" RuleId="urn:spt:names:tc:xacml:3.0:ruleid:permit-manager">
+            <Description>Permit HR staff</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                    <Description>User belongs to HR</Description>
+                    <VariableReference VariableId="group-name-hr"/>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                </Apply>
+            </Condition>
+        </Rule>
+    </Policy>
+    <PolicyCombinerParameters PolicyIdRef="urn:spt:names:tc:xacml:3.0:policyid:printers">
+        <CombinerParameter ParameterName="dst-sgt">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">102</AttributeValue>
+        </CombinerParameter>
+    </PolicyCombinerParameters>
+    <Policy RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides" PolicyId="urn:spt:names:tc:xacml:3.0:policyid:ftp-salary" Version="3.0">
+        <Description>Salary FTP Servers</Description>
+        <Target/>
+        <CombinerParameters>
+            <CombinerParameter ParameterName="dst-sgt">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">203</AttributeValue>
+            </CombinerParameter>
+        </CombinerParameters>
+        <VariableDefinition VariableId="group-name-developer">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">dev</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-manager">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">mgr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="group-name-hr">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">hr</AttributeValue>
+        </VariableDefinition>
+        <VariableDefinition VariableId="radius-nas-port-wired">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wired</AttributeValue>
+        </VariableDefinition>
+        <Rule Effect="Permit" RuleId="permit-wired-developer">
+            <Description>Permit Developers from wired connection</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <Description>AND</Description>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+                        <Description>OR</Description>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                            <Description>User belongs to HR Staff</Description>
+                            <VariableReference VariableId="group-name-hr"/>
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                            <Description>User belongs to Managers</Description>
+                            <VariableReference VariableId="group-name-manager"/>
+                            <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                        </Apply>
+                    </Apply>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                        <Description>wired connection</Description>
+                        <VariableReference VariableId="radius-nas-port-wired"/>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-nas-port" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    </Apply>
+                </Apply>
+            </Condition>
+        </Rule>
+    </Policy>
+    <PolicyCombinerParameters PolicyIdRef="urn:spt:names:tc:xacml:3.0:policyid:ftp-salary">
+        <CombinerParameter ParameterName="dst-sgt">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">103</AttributeValue>
+        </CombinerParameter>
+    </PolicyCombinerParameters>
+</PolicySet>

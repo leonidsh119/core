@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/authzforce-ce-core.iml" filepath="$PROJECT_DIR$/authzforce-ce-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pdp-cli/authzforce-ce-core-pdp-cli.iml" filepath="$PROJECT_DIR$/pdp-cli/authzforce-ce-core-pdp-cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pdp-engine/authzforce-ce-core-pdp-engine.iml" filepath="$PROJECT_DIR$/pdp-engine/authzforce-ce-core-pdp-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pdp-io-xacml-json/authzforce-ce-core-pdp-io-xacml-json.iml" filepath="$PROJECT_DIR$/pdp-io-xacml-json/authzforce-ce-core-pdp-io-xacml-json.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pdp-testutils/authzforce-ce-core-pdp-testutils.iml" filepath="$PROJECT_DIR$/pdp-testutils/authzforce-ce-core-pdp-testutils.iml" />
+    </modules>
+  </component>
+</project>
