@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" ReturnPolicyIdList="true" CombinedDecision="false">
-   <Attributes xml:id="resource" Category="urn:oasis:names:tc:xacml:3.0:attributecategory:resource">
-      <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" IncludeInResult="false">
-         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">network</AttributeValue>
-      </Attribute>
-   </Attributes>
    <Attributes xml:id="environment" Category="urn:oasis:names:tc:xacml:3.0:attributecategory:environment">
-      <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-nas-port" IncludeInResult="false">
-         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wired</AttributeValue>
+      <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-auth-type" IncludeInResult="false">
+         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">MAB</AttributeValue>
       </Attribute>
    </Attributes>
    <Attributes xml:id="subject" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
       <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" IncludeInResult="false">
-         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">dev</AttributeValue>
-         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">mgr</AttributeValue>
+         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0xDEADBEEF</AttributeValue>
       </Attribute>
    </Attributes>
 </Request>

@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
    <Result>
       <Decision>Permit</Decision>
       <AssociatedAdvice>
-         <Advice AdviceId="100"/>
+         <Advice AdviceId="authorization-result">
+            <AttributeAssignment AttributeId="profile-id" DataType="http://www.w3.org/2001/XMLSchema#string">5af4957e-5c44-11eb-ae93-0242ac130002</AttributeAssignment>
+         </Advice>
       </AssociatedAdvice>
       <PolicyIdentifierList>
-         <PolicyIdReference Version="3.0">urn:spt:names:tc:xacml:3.0:policyid:sql-servers</PolicyIdReference>
-         <PolicySetIdReference Version="3.0">urn:spt:names:tc:xacml:3.0:policySetid:01</PolicySetIdReference>
+         <PolicyIdReference Version="1.0">urn:spt:names:tc:xacml:3.0:policyid:MAB</PolicyIdReference>
+         <PolicySetIdReference Version="1.0">root</PolicySetIdReference>
       </PolicyIdentifierList>
    </Result>
 </Response>

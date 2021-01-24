@@ -1,63 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-overrides" PolicySetId="urn:spt:names:tc:xacml:3.0:policySetid:01" Version="3.0">
-	<Description>A5S Authorization policy</Description>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-unless-permit" PolicySetId="root" Version="1.0" MaxDelegationDepth="10">
+	<Description>Root Policy Set for NAC</Description>
 	<Target/>
-	<Policy RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides" PolicyId="urn:spt:names:tc:xacml:3.0:policyid:sql-servers" Version="3.0">
-		<Description>SQL Servers</Description>
-		<Target>
-			<AnyOf>
-				<AllOf>
-					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">network</AttributeValue>
-						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attributecategory:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-					</Match>
-				</AllOf>
-			</AnyOf>
-		</Target>
-		<CombinerParameters>
-			<CombinerParameter ParameterName="dst-sgt">
-				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">100</AttributeValue>
-			</CombinerParameter>
-		</CombinerParameters>
-		<VariableDefinition VariableId="developer-group-name">
-			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">dev</AttributeValue>
+	<Policy RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit" PolicyId="urn:spt:names:tc:xacml:3.0:policyid:MAB" Version="1.0" MaxDelegationDepth="10">
+		<Description>Authorization Policy for NAC</Description>
+		<Target/>
+		<VariableDefinition VariableId="radius-auth-type-mab">
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">MAB</AttributeValue>
 		</VariableDefinition>
-		<VariableDefinition VariableId="manager-group-name">
-			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">mgr</AttributeValue>
+		<VariableDefinition VariableId="endpoint-mac">
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0xDEADBEEF</AttributeValue>
 		</VariableDefinition>
-		<VariableDefinition VariableId="radius-nas-port-wired">
-			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">wired</AttributeValue>
-		</VariableDefinition>
-		<Rule Effect="Permit" RuleId="permit-wired-developer">
-			<Description>Allows access to Developers from wired connection</Description>
+		<Rule Effect="Permit" RuleId="urn:spt:names:tc:xacml:3.0:ruleid:radius-mab-whitelisted">
+			<Description>Authorization with RADIUS MAB</Description>
 			<Condition>
 				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
 					<Description>AND</Description>
 					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-						<Description>User belongs to dev group</Description>
-						<VariableReference VariableId="developer-group-name"/>
-						<AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+						<Description>RADIUS Flow Authentication Type is MAB</Description>
+						<VariableReference VariableId="radius-auth-type-mab"/>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attributecategory:environment" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-auth-type" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
 					</Apply>
 					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-						<Description>Endpoint connected by wire</Description>
-						<VariableReference VariableId="radius-nas-port-wired"/>
-						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attributecategory:environment" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-nas-port" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+						<Description>Endpoint MAC Address belongs to a white list</Description>
+						<VariableReference VariableId="endpoint-mac"/>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
 					</Apply>
 				</Apply>
 			</Condition>
+			<AdviceExpressions>
+				<AdviceExpression AppliesTo="Permit" AdviceId="authorization-result">
+					<AttributeAssignmentExpression AttributeId="profile-id">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">5af4957e-5c44-11eb-ae93-0242ac130002</AttributeValue>
+					</AttributeAssignmentExpression>
+				</AdviceExpression>
+			</AdviceExpressions>
 		</Rule>
-		<Rule Effect="Permit" RuleId="permit-manager">
-			<Description>Allows access to Managers</Description>
+		<Rule Effect="Permit" RuleId="urn:spt:names:tc:xacml:3.0:ruleid:radius-mab-non-whitelisted">
+			<Description>Authorization with RADIUS MAB</Description>
 			<Condition>
-				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-					<Description>User belongs to Managers group</Description>
-					<VariableReference VariableId="manager-group-name"/>
-					<AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+					<Description>AND</Description>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+						<Description>RADIUS Flow Authentication Type is MAB</Description>
+						<VariableReference VariableId="radius-auth-type-mab"/>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attributecategory:environment" AttributeId="urn:oasis:names:tc:xacml:1.0:environment:radius-auth-type" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+					</Apply>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+						<Description>Endpoint MAC Address does not belong to a white list</Description>
+						<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+							<Description>Endpoint MAC Address belongs to a white list</Description>
+							<VariableReference VariableId="endpoint-mac"/>
+							<AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+						</Apply>
+					</Apply>
 				</Apply>
 			</Condition>
+			<AdviceExpressions>
+				<AdviceExpression AppliesTo="Permit" AdviceId="authorization-result">
+					<AttributeAssignmentExpression AttributeId="profile-id">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1bf2c518-52d1-4199-b8f2-81a074175094</AttributeValue>
+					</AttributeAssignmentExpression>
+				</AdviceExpression>
+			</AdviceExpressions>
 		</Rule>
-		<AdviceExpressions>
-			<AdviceExpression AppliesTo="Permit" AdviceId="100"/>
-		</AdviceExpressions>
 	</Policy>
 </PolicySet>
